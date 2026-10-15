@@ -7,296 +7,290 @@
 <link rel="shortcut icon" href="favicon.png" type="image/png">
 <title>Timer OSCE Prodita</title>
 <style>
-/* ===================================================
-   STRATEGI LAYER FIX - ADAPTASI KLAS REFERENSI SUKSES ANDA
-   =================================================== */
-.rakbuku-full-screen {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    background: #0f172a !important; /* Latar belakang standar gelap ruang ujian */
-    z-index: 9999999999 !important; /* Sesuai dengan spesifikasi layer terdepan Anda */
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    padding: 0 !important;
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    transition: background 0.5s ease !important;
-    
-    /* Penataan Konten Tengah */
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    align-items: center !important;
-    
-    /* Proteksi seleksi teks */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+    background: #0f172a;
+    color: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
 
-.rakbuku-full-screen * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Arial, sans-serif;
+#osce-app {
+    min-height: 100dvh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: background 500ms ease;
 }
 
-/* KONTAINER UTAMA TIMER */
-.rakbuku-full-screen .container {
-    width: 100%;
-    max-width: 1200px;
+#osce-app.reading { background: radial-gradient(1200px 800px at 50% 10%, #1d4ed8, #0f172a); }
+#osce-app.exam { background: radial-gradient(1200px 800px at 50% 10%, #15803d, #0f172a); }
+#osce-app.warning { background: radial-gradient(1200px 800px at 50% 10%, #dc2626, #0f172a); }
+#osce-app.move { background: radial-gradient(1200px 800px at 50% 10%, #ea580c, #0f172a); }
+#osce-app.freeze { background: radial-gradient(1200px 800px at 50% 10%, #7c3aed, #0f172a); }
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(16px, 4vw, 48px);
+    gap: clamp(12px, 2.5vw, 24px);
     text-align: center;
-    padding: 40px 40px 30px 40px;
-    box-sizing: border-box;
-    margin: 0 auto;
 }
 
-/* Memaksa seluruh elemen teks berwarna putih solid agar menang kontras dari CSS CMS */
-.rakbuku-full-screen h1 {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    color: #ffffff !important;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.rakbuku-full-screen .rotation {
-    font-size: 2rem;
-    margin-bottom: 15px;
-    color: #ffffff !important;
+.logo {
+    font-size: clamp(28px, 8vw, 72px);
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-shadow: 0 20px 60px rgba(15, 23, 42, 0.6);
 }
 
-.rakbuku-full-screen .phase {
-    font-size: 3rem;
-    font-weight: bold;
-    margin-bottom: 25px;
-    color: #ffffff !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+.rotation {
+    font-size: clamp(16px, 3vw, 24px);
+    font-weight: 600;
+    opacity: 0.85;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
-.rakbuku-full-screen .timer {
-    font-size: 10rem;
-    font-weight: bold;
-    margin-bottom: 25px;
-    color: #ffffff !important;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.6);
-    line-height: 1;
+.phase {
+    font-size: clamp(22px, 6vw, 48px);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
-.rakbuku-full-screen .message {
-    font-size: 2rem;
-    min-height: 70px;
-    margin-bottom: 25px;
-    color: #ffffff !important;
+.timer {
+    font-size: clamp(84px, 18vw, 200px);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 40px 120px rgba(15, 23, 42, 0.7);
 }
 
-.rakbuku-full-screen .progress-container {
-    width: 100%;
-    height: 40px;
-    background: #1e293b !important;
-    border-radius: 50px;
+.timer.blink {
+    animation: blink 900ms infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+}
+
+.message {
+    min-height: clamp(20px, 3vw, 28px);
+    font-size: clamp(14px, 2.6vw, 20px);
+    opacity: 0.9;
+}
+
+.progress-wrap {
+    width: min(1100px, 92vw);
+    height: clamp(10px, 2vw, 14px);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
     overflow: hidden;
-    margin-bottom: 30px;
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 20px 60px rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(4px);
 }
 
-.rakbuku-full-screen .progress {
+.progress {
     height: 100%;
     width: 100%;
-    background: #22c55e !important;
-    transition: width 1s linear;
+    background: linear-gradient(90deg, rgba(255,255,255,0.9), rgba(226,232,255,0.8));
+    transition: width 1000ms linear;
 }
 
-.rakbuku-full-screen .controls {
+.controls {
     display: flex;
-    gap: 15px;
-    justify-content: center;
     flex-wrap: wrap;
-}
-
-/* STYLING BUTTONS KONTROL */
-.rakbuku-full-screen button {
-    padding: 15px 30px;
-    border: none !important;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #ffffff !important;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.rakbuku-full-screen .start { background: #22c55e !important; }
-.rakbuku-full-screen .pause { background: #f59e0b !important; }
-.rakbuku-full-screen .reset { background: #ef4444 !important; }
-.rakbuku-full-screen .full { background: #3b82f6 !important; }
-.rakbuku-full-screen .skip { background: #64748b !important; }
-
-/* WARNA LATAR BELAKANG DINAMIS DI LEVEL KONTAINER REFERENSI */ 
-.rakbuku-full-screen.reading { background: #2563eb !important; }
-.rakbuku-full-screen.exam { background: #16a34a !important; }
-.rakbuku-full-screen.warning { background: #dc2626 !important; }
-.rakbuku-full-screen.move { background: #ea580c !important; }
-.rakbuku-full-screen.freeze { background: #7c3aed !important; }
-
-.rakbuku-full-screen .blink {
-    animation: blink-animation 1s infinite;
-}
-
-@keyframes blink-animation {
-    50% { opacity: .3; }
-}
-
-/* STYLING WRAPPER PANEL ROTASI BAWAH */
-.rakbuku-full-screen .rotation-wrapper {
-    margin-top: 20px;
-    display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 10px;
-    border-top: 3px solid rgba(255, 255, 255, .3);
-    padding-top: 15px;
-    width: 100%;
+    gap: clamp(8px, 1.6vw, 14px);
+    width: min(1100px, 92vw);
 }
 
-.rakbuku-full-screen .rotation-wrapper::-webkit-scrollbar {
-    height: 6px;
-}
-
-.rakbuku-full-screen .rotation-btn {
-    min-width: 60px;
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-    border: none !important;
-    border-radius: 18px;
-    background: #e5e7eb !important;
-    color: #64748b !important;
-    font-size: 24px;
+.btn {
+    appearance: none;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    padding: clamp(10px, 1.8vw, 14px) clamp(16px, 3vw, 24px);
+    font-size: clamp(12px, 1.6vw, 15px);
     font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+    background: rgba(15, 23, 42, 0.45);
+    border-color: rgba(255, 255, 255, 0.4);
     cursor: pointer;
-    transition: all .3s ease;
+    transition: all 160ms ease;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(6px);
 }
 
-.rakbuku-full-screen .rotation-btn:hover {
+.btn:hover:not(:active) {
+    transform: translateY(-2px);
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.45);
+}
+
+.btn:active {
+    transform: translateY(-1px) scale(0.99);
+}
+
+.btn.start { background: linear-gradient(135deg, rgba(34,197,94,0.95), rgba(22,163,74,0.9)); border-color: rgba(187,247,208,0.9); }
+.btn.pause { background: linear-gradient(135deg, rgba(245,158,11,0.95), rgba(217,119,6,0.9)); border-color: rgba(254,240,138,0.9); }
+.btn.reset { background: linear-gradient(135deg, rgba(239,68,68,0.95), rgba(220,38,38,0.9)); border-color: rgba(254,202,202,0.9); }
+.btn.full  { background: linear-gradient(135deg, rgba(59,130,246,0.95), rgba(37,99,235,0.9)); border-color: rgba(191,219,254,0.9); }
+.btn.skip  { background: linear-gradient(135deg, rgba(100,116,139,0.95), rgba(71,85,105,0.9)); border-color: rgba(226,232,255,0.8); }
+
+.rotation-bar {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: clamp(6px, 1.2vw, 10px);
+    width: min(1100px, 92vw);
+    overflow-x: auto;
+    padding: 4px;
+    margin-top: clamp(6px, 1.6vw, 12px);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.4) transparent;
+}
+
+.rotation-bar::-webkit-scrollbar {
+    height: 8px;
+}
+.rotation-bar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.rotation-bar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.35);
+    border-radius: 999px;
+}
+
+.rot-btn {
+    flex: 0 0 auto;
+    width: clamp(44px, 6vw, 58px);
+    height: clamp(44px, 6vw, 58px);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(15,23,42,0.4);
+    color: rgba(255,255,255,0.9);
+    font-weight: 800;
+    font-size: clamp(16px, 2.4vw, 22px);
+    cursor: pointer;
+    transition: all 160ms ease;
+    box-shadow: 0 16px 50px rgba(15,23,42,0.4);
+    backdrop-filter: blur(6px);
+}
+
+.rot-btn:hover:not(.active) {
     transform: translateY(-2px);
 }
 
-.rakbuku-full-screen .rotation-btn.active {
-    background: #0f172a !important;
-    color: white !important;
-    box-shadow: 0 0 0 3px rgba(148,163,184,.4), 0 8px 20px rgba(0,0,0,.3) !important;
+.rot-btn.active {
+    background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(226,232,255,0.9));
+    color: #0f172a;
+    border-color: #fff;
+    box-shadow: 0 22px 70px rgba(15,23,42,0.55);
 }
 
-/* ===================================================
-   SEKSI BLOK FOOTER MANDIRI (PERBAIKAN JARAK & BACKGROUND)
-   =================================================== */
-.rakbuku-full-screen .osce-separate-footer {
-    width: 100vw !important;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: calc(50% - 50vw) !important;
-    margin-right: calc(50% - 50vw) !important;
-    background: #00975d !important; /* <--- Silakan ganti warna background footer di sini jika ingin warna lain */
-    padding: 25px 30px 45px 30px !important; /* Jarak atas-bawah ditambah agar longgar dan menutup area biru bawah */
-    text-align: center !important;
-    border-top: 3px solid #b2d235 !important; /* Ketebalan garis hijau disesuaikan agar lebih tegas */
-    flex-shrink: 0; 
-    margin-top: 0 !important; /* Memberikan ruang/jarak dari tombol rotasi di atasnya agar tidak mepet */
+.footer {
+    width: 100%;
+    padding: clamp(14px, 2vw, 20px) clamp(16px, 4vw, 32px);
+    text-align: center;
+    font-size: clamp(11px, 1.4vw, 13px);
+    color: rgba(255,255,255,0.85);
+    background: radial-gradient(800px 200px at 50% 0%, rgba(255,255,255,0.12), transparent), linear-gradient(180deg, rgba(15,23,42,0.3), rgba(15,23,42,0.6));
+    border-top: 1px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(6px);
 }
 
-.rakbuku-full-screen .osce-separate-footer p {
-    color: rgb(252, 250, 250) !important; /* Warna teks dibuat sedikit lebih terang agar mudah dibaca */
-    font-size: 0.95rem;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    line-height: 1.4;
-}
-
-/* RESPONSIVE RESOLUTION */
-@media(max-width:900px){
-    .rakbuku-full-screen h1 { font-size: 2.5rem; }
-    .rakbuku-full-screen .timer { font-size: 5rem; }
-    .rakbuku-full-screen .phase { font-size: 1.8rem; }
-    .rakbuku-full-screen .osce-separate-footer { padding: 12px 20px !important; }
-    .rakbuku-full-screen .osce-separate-footer p { font-size: 0.8rem; }
+@media (max-width: 640px) {
+    .controls {
+        gap: 8px;
+    }
+    .btn {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 140px;
+    }
 }
 </style>
 </head>
 <body>
-<div class="rakbuku-full-screen" id="osce-app-layer">
-
-    <div class="container">
-
-        <h1>OSCE TIMER</h1>
-
-        <div class="rotation" id="rotation">Rotasi 1 / 11</div>
-
-        <div class="phase" id="phase">Siap Memulai</div>
-
+<div id="osce-app" class="reading">
+    <main class="main">
+        <header class="header">
+            <h1 class="logo">OSCE TIMER</h1>
+            <div class="rotation" id="rotation">Rotasi 1 / 11</div>
+            <div class="phase" id="phase">Siap Memulai</div>
+        </header>
         <div class="timer" id="timer">15:00</div>
-
         <div class="message" id="message">Tekan tombol START</div>
-
-        <div class="progress-container">
+        <div class="progress-wrap">
             <div class="progress" id="progress"></div>
         </div>
-
         <div class="controls">
-            <button class="start" id="start-btn" onclick="startTimer()">START</button>
-            <button class="pause" onclick="pauseTimer()">PAUSE</button>
-            <button class="reset" onclick="resetTimer()">RESET</button>
-            <button class="full" onclick="goFullscreen()">FULLSCREEN</button>
-            <button class="skip" onclick="skipPhase()">LEWATI</button>
+            <button class="btn start" id="start-btn" onclick="startTimer()">START</button>
+            <button class="btn pause" onclick="pauseTimer()">PAUSE</button>
+            <button class="btn reset" onclick="resetTimer()">RESET</button>
+            <button class="btn full" onclick="goFullscreen()">FULLSCREEN</button>
+            <button class="btn skip" onclick="skipPhase()">LEWATI</button>
         </div>
-
-        <div class="rotation-wrapper">
-            <button class="rotation-btn active" onclick="goRotation(1)">1</button>
-            <button class="rotation-btn" onclick="goRotation(2)">2</button>
-            <button class="rotation-btn" onclick="goRotation(3)">3</button>
-            <button class="rotation-btn" onclick="goRotation(4)">4</button>
-            <button class="rotation-btn" onclick="goRotation(5)">5</button>
-            <button class="rotation-btn" onclick="goRotation(6)">6</button>
-            <button class="rotation-btn" onclick="goRotation(7)">7</button>
-            <button class="rotation-btn" onclick="goRotation(8)">8</button>
-            <button class="rotation-btn" onclick="goRotation(9)">9</button>
-            <button class="rotation-btn" onclick="goRotation(10)">10</button>
-            <button class="rotation-btn" onclick="goRotation(11)">11</button>
+        <div class="rotation-bar">
+            <button class="rot-btn active" onclick="goRotation(1)">1</button>
+            <button class="rot-btn" onclick="goRotation(2)">2</button>
+            <button class="rot-btn" onclick="goRotation(3)">3</button>
+            <button class="rot-btn" onclick="goRotation(4)">4</button>
+            <button class="rot-btn" onclick="goRotation(5)">5</button>
+            <button class="rot-btn" onclick="goRotation(6)">6</button>
+            <button class="rot-btn" onclick="goRotation(7)">7</button>
+            <button class="rot-btn" onclick="goRotation(8)">8</button>
+            <button class="rot-btn" onclick="goRotation(9)">9</button>
+            <button class="rot-btn" onclick="goRotation(10)">10</button>
+            <button class="rot-btn" onclick="goRotation(11)">11</button>
         </div>
-
-        
-    </div>
-
-<!-- AREA BAWAH: BLOK FOOTER MANDIRI DENGAN WARNA BACKGROUND SENDIRI -->
-    <div class="osce-separate-footer">
+    </main>
+    <footer class="footer">
         <p>© 2026 Copyright Kampus III Prodi Keperawatan Blitar • Inspired from Prodi Keperawatan Lawang Poltekkes Kemenkes Malang</p>
-    </div>
-
+    </footer>
 </div>
 <script>
 const TOTAL_ROTATION = 11;
-const ROTATION_TIME = 900; 
-const FREEZE_TIME = 480; 
+const ROTATION_TIME = 900;
+const FREEZE_TIME = 480;
 
 let rotation = 1;
 let remaining = ROTATION_TIME;
 let interval = null;
 let running = false;
 let freezeMode = false;
-let isContinued = false; // Penanda khusus status "Lanjutkan"
+let isContinued = false;
 
 const timerEl = document.getElementById('timer');
 const phaseEl = document.getElementById('phase');
 const messageEl = document.getElementById('message');
 const rotationEl = document.getElementById('rotation');
 const progressEl = document.getElementById('progress');
-const appLayer = document.getElementById('osce-app-layer');
+const appEl = document.getElementById('osce-app');
 const startBtnEl = document.getElementById('start-btn');
 
 function speak(text){
@@ -312,105 +306,91 @@ function speak(text){
 function updateDisplay(){
     let minutes = Math.floor(remaining/60);
     let seconds = remaining%60;
-
-    timerEl.innerHTML = String(minutes).padStart(2,'0') + ':' + String(seconds).padStart(2,'0');
-
+    timerEl.textContent = String(minutes).padStart(2,'0') + ':' + String(seconds).padStart(2,'0');
     let total = freezeMode ? FREEZE_TIME : ROTATION_TIME;
     progressEl.style.width = ((remaining/total)*100)+'%';
-
     updatePhase();
 }
 
 function updatePhase(){
-    appLayer.className = 'rakbuku-full-screen';
+    appEl.classList.remove('reading','exam','warning','move','freeze');
     timerEl.classList.remove('blink');
-
     if(freezeMode){
-        phaseEl.innerHTML = "FREEZE";
-        appLayer.classList.add('freeze');
-
+        phaseEl.textContent = 'FREEZE';
+        appEl.classList.add('freeze');
         if(remaining > 420){
-            messageEl.innerHTML = "Freeze dimulai. Penguji istirahat dan peserta menunggu di depan stase";
+            messageEl.textContent = 'Freeze dimulai. Penguji istirahat dan peserta menunggu di depan stase';
         } else if(remaining <= 60){
-            messageEl.innerHTML = "Penguji dipersilakan kembali ke ruangan";
+            messageEl.textContent = 'Penguji dipersilakan kembali ke ruangan';
         } else {
-            messageEl.innerHTML = "Freeze berlangsung";
+            messageEl.textContent = 'Freeze berlangsung';
         }
         return;
     }
-
     let elapsed = ROTATION_TIME - remaining;
-
     if(elapsed < 60){
-        phaseEl.innerHTML = "MEMBACA SOAL";
-        messageEl.innerHTML = "Peserta membaca soal";
-        appLayer.classList.add('reading');
+        phaseEl.textContent = 'MEMBACA SOAL';
+        messageEl.textContent = 'Peserta membaca soal';
+        appEl.classList.add('reading');
     }
     else if(elapsed < 780){
-        phaseEl.innerHTML = "PELAKSANAAN UJIAN";
-        messageEl.innerHTML = "Pelaksanaan ujian berlangsung";
-        appLayer.classList.add('exam');
+        phaseEl.textContent = 'PELAKSANAAN UJIAN';
+        messageEl.textContent = 'Pelaksanaan ujian berlangsung';
+        appEl.classList.add('exam');
     }
     else if(elapsed < 840){
-        phaseEl.innerHTML = "WARNING";
-        messageEl.innerHTML = "Waktu tersisa 1 menit";
-        appLayer.classList.add('warning');
+        phaseEl.textContent = 'WARNING';
+        messageEl.textContent = 'Waktu tersisa 1 menit';
+        appEl.classList.add('warning');
         timerEl.classList.add('blink');
     }
     else{
-        phaseEl.innerHTML = "PINDAH STASE";
-        messageEl.innerHTML = "Silakan berpindah stase";
-        appLayer.classList.add('move');
+        phaseEl.textContent = 'PINDAH STASE';
+        messageEl.textContent = 'Silakan berpindah stase';
+        appEl.classList.add('move');
     }
 }
 
 function nextStage(){
-    isContinued = false; // Reset status karena berpindah stase/rotasi baru utuh
-    
+    isContinued = false;
     if(freezeMode){
         freezeMode = false;
         rotation++;
-
         if(rotation > TOTAL_ROTATION){
             finishOSCE();
             return;
         }
-
         remaining = ROTATION_TIME;
-        rotationEl.innerHTML = "Rotasi " + rotation + " / " + TOTAL_ROTATION;
+        rotationEl.textContent = 'Rotasi ' + rotation + ' / ' + TOTAL_ROTATION;
         syncRotationButtons();
-        speak("Rotasi berikutnya dimulai");
+        speak('Rotasi berikutnya dimulai');
         updateDisplay();
         return;
     }
-
     if(rotation === 6){
         freezeMode = true;
         remaining = FREEZE_TIME;
-        phaseEl.innerHTML = "FREEZE";
-        speak("Freeze dimulai. Penguji istirahat dan peserta menunggu di depan stase");
+        phaseEl.textContent = 'FREEZE';
+        speak('Freeze dimulai. Penguji istirahat dan peserta menunggu di depan stase');
         updateDisplay();
         return;
     }
-
     rotation++;
-
     if(rotation > TOTAL_ROTATION){
         finishOSCE();
         return;
     }
-
-    rotationEl.innerHTML = "Rotasi " + rotation + " / " + TOTAL_ROTATION;
+    rotationEl.textContent = 'Rotasi ' + rotation + ' / ' + TOTAL_ROTATION;
     remaining = ROTATION_TIME;
     syncRotationButtons();
-    speak("Rotasi " + rotation + " dimulai");
+    speak('Rotasi ' + rotation + ' dimulai');
     updateDisplay();
 }
 
 function syncRotationButtons() {
-    document.querySelectorAll('#osce-app-layer .rotation-btn').forEach(btn => btn.classList.remove('active'));
-    if(rotation <= TOTAL_ROTATION){
-        document.querySelectorAll('#osce-app-layer .rotation-btn')[rotation - 1].classList.add('active');
+    document.querySelectorAll('.rot-btn').forEach(btn => btn.classList.remove('active'));
+    if(rotation >= 1 && rotation <= TOTAL_ROTATION){
+        document.querySelectorAll('.rot-btn')[rotation - 1].classList.add('active');
     }
 }
 
@@ -418,31 +398,29 @@ function finishOSCE(){
     clearInterval(interval);
     running = false;
     isContinued = false;
-    startBtnEl.innerHTML = "START"; 
-    phaseEl.innerHTML = "SELESAI";
-    messageEl.innerHTML = "OSCE telah selesai";
-    timerEl.innerHTML = "00:00";
-    speak("OSCE telah selesai");
+    startBtnEl.textContent = 'START';
+    phaseEl.textContent = 'SELESAI';
+    messageEl.textContent = 'OSCE telah selesai';
+    timerEl.textContent = '00:00';
+    appEl.classList.remove('reading','exam','warning','move','freeze');
+    progressEl.style.width = '0%';
+    timerEl.classList.remove('blink');
+    speak('OSCE telah selesai');
 }
 
 function tick(){
     remaining--;
-
     if(!freezeMode){
         let elapsed = ROTATION_TIME - remaining;
-
-        if(elapsed === 60){ speak("Silakan membaca soal"); }
-        if(elapsed === 780){ speak("Waktu tersisa satu menit"); }
-        if(elapsed === 840){ speak("Silakan pindah stase berikutnya"); }
+        if(elapsed === 60){ speak('Silakan membaca soal'); }
+        if(elapsed === 780){ speak('Waktu tersisa satu menit'); }
+        if(elapsed === 840){ speak('Silakan pindah stase berikutnya'); }
+    } else {
+        if(remaining === 60){ speak('Penguji dipersilakan kembali ke ruangan'); }
     }
-    else{
-        if(remaining === 60){ speak("Penguji dipersilakan kembali ke ruangan"); }
-    }
-
     if(remaining <= 0){
         nextStage();
     }
-
     updateDisplay();
 }
 
@@ -450,22 +428,18 @@ function startTimer(){
     if(running) return;
     running = true;
     interval = setInterval(tick, 1000);
-
-    /* KONDISI FILTER SUARA */
-    if (!isContinued) {
-        // Hanya berbunyi jika ini start murni awal rotasi (bukan lanjutan pause)
-        speak("Peserta dipersilakan membaca soal");
+    if(!isContinued){
+        speak('Peserta dipersilakan membaca soal');
     }
-    
-    startBtnEl.innerHTML = "PAUSE"; 
+    startBtnEl.textContent = 'PAUSE';
 }
 
 function pauseTimer(){
-    if(!running) return; 
+    if(!running) return;
     running = false;
     clearInterval(interval);
-    isContinued = true; // Kunci status: klik start berikutnya adalah "Lanjutkan"
-    startBtnEl.innerHTML = "LANJUTKAN";
+    isContinued = true;
+    startBtnEl.textContent = 'LANJUTKAN';
 }
 
 function resetTimer(){
@@ -474,20 +448,20 @@ function resetTimer(){
     rotation = 1;
     remaining = ROTATION_TIME;
     freezeMode = false;
-    isContinued = false; // Reset detektor status
-
-    startBtnEl.innerHTML = "START"; 
-    rotationEl.innerHTML = "Rotasi 1 / 11";
-    phaseEl.innerHTML = "Siap Memulai";
-    messageEl.innerHTML = "Tekan tombol START";
-    
+    isContinued = false;
+    startBtnEl.textContent = 'START';
+    rotationEl.textContent = 'Rotasi 1 / 11';
+    phaseEl.textContent = 'Siap Memulai';
+    messageEl.textContent = 'Tekan tombol START';
+    appEl.classList.remove('reading','exam','warning','move','freeze');
+    appEl.classList.add('reading');
     syncRotationButtons();
     updateDisplay();
 }
 
 function goFullscreen(){
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {});
+    if(!document.fullscreenElement){
+        document.documentElement.requestFullscreen().catch(err=>{});
     } else {
         document.exitFullscreen();
     }
@@ -499,60 +473,54 @@ function goRotation(rot){
     rotation = rot;
     freezeMode = false;
     remaining = ROTATION_TIME;
-    isContinued = false; // Reset karena pindah stase manual berarti stase baru
-
-    startBtnEl.innerHTML = "START"; 
-    rotationEl.innerHTML = "Rotasi " + rotation + " / " + TOTAL_ROTATION;
+    isContinued = false;
+    startBtnEl.textContent = 'START';
+    rotationEl.textContent = 'Rotasi ' + rotation + ' / ' + TOTAL_ROTATION;
     syncRotationButtons();
-
-    phaseEl.innerHTML = "MEMBACA SOAL";
-    messageEl.innerHTML = "Peserta membaca soal";
-    appLayer.className = 'rakbuku-full-screen reading';
-
+    phaseEl.textContent = 'MEMBACA SOAL';
+    messageEl.textContent = 'Peserta membaca soal';
+    appEl.classList.remove('reading','exam','warning','move','freeze');
+    appEl.classList.add('reading');
     updateDisplay();
-    speak("Rotasi " + rotation + " dipilih");
+    speak('Rotasi ' + rotation + ' dipilih');
 }
 
 function skipPhase(){
-    isContinued = false; // Reset flag saat melompati fase secara manual
+    isContinued = false;
     if(freezeMode){
         nextStage();
         return;
     }
-
     let elapsed = ROTATION_TIME - remaining;
-
     if(elapsed < 60){
         remaining = 840;
         updateDisplay();
-        speak("silakan masuk");
+        speak('silakan masuk');
         return;
     }
     if(elapsed < 780){
         remaining = 120;
         updateDisplay();
-        speak("Waktu tersisa satu menit");
+        speak('Waktu tersisa satu menit');
         return;
     }
     if(elapsed < 840){
         remaining = 60;
         updateDisplay();
-        speak("Silakan pindah stase berikutnya");
+        speak('Silakan pindah stase berikutnya');
         return;
     }
     nextStage();
 }
 
 updateDisplay();
+syncRotationButtons();
 
-/* Proteksi Keamanan Sistem */
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('selectstart', e => e.preventDefault());
-document.addEventListener('dragstart', e => e.preventDefault());
+document.addEventListener('contextmenu', e=>e.preventDefault());
+document.addEventListener('selectstart', e=>e.preventDefault());
+document.addEventListener('dragstart', e=>e.preventDefault());
 document.addEventListener('keydown', function(e){
-    if(e.key === "F12" || 
-       (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) || 
-       (e.ctrlKey && (e.key === "u" || e.key === "s" || e.key === "c"))){
+    if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'))||(e.ctrlKey&&(e.key==='u'||e.key==='s'||e.key==='c'))){
         e.preventDefault();
     }
 });
