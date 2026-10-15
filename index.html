@@ -371,6 +371,7 @@ function nextStage(){
         rotationEl.innerHTML = "Rotasi " + rotation + " / " + TOTAL_ROTATION;
         syncRotationButtons();
         speak("Rotasi berikutnya dimulai");
+        updateDisplay();
         return;
     }
 
@@ -379,6 +380,7 @@ function nextStage(){
         remaining = FREEZE_TIME;
         phaseEl.innerHTML = "FREEZE";
         speak("Freeze dimulai. Penguji istirahat dan peserta menunggu di depan stase");
+        updateDisplay();
         return;
     }
 
@@ -393,6 +395,7 @@ function nextStage(){
     remaining = ROTATION_TIME;
     syncRotationButtons();
     speak("Rotasi " + rotation + " dimulai");
+    updateDisplay();
 }
 
 function syncRotationButtons() {
@@ -445,7 +448,7 @@ function startTimer(){
         speak("Peserta dipersilakan membaca soal");
     }
     
-    startBtnEl.innerHTML = "START"; 
+    startBtnEl.innerHTML = "PAUSE"; 
 }
 
 function pauseTimer(){
@@ -453,7 +456,7 @@ function pauseTimer(){
     running = false;
     clearInterval(interval);
     isContinued = true; // Kunci status: klik start berikutnya adalah "Lanjutkan"
-    startBtnEl.innerHTML = "LANJUTKAN"; 
+    startBtnEl.innerHTML = "LANJUTKAN";
 }
 
 function resetTimer(){
@@ -495,6 +498,7 @@ function goRotation(rot){
 
     phaseEl.innerHTML = "MEMBACA SOAL";
     messageEl.innerHTML = "Peserta membaca soal";
+    appLayer.className = 'rakbuku-full-screen reading';
 
     updateDisplay();
     speak("Rotasi " + rotation + " dipilih");
