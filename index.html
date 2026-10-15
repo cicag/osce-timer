@@ -19,14 +19,15 @@
     background: #0f172a !important; /* Latar belakang standar gelap ruang ujian */
     z-index: 9999999999 !important; /* Sesuai dengan spesifikasi layer terdepan Anda */
     overflow-y: auto !important;
-    padding: 40px;
+    overflow-x: hidden !important;
+    padding: 0 !important;
     box-sizing: border-box;
     transition: background 0.5s ease !important;
     
     /* Penataan Konten Tengah */
     display: flex !important;
     flex-direction: column !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     align-items: center !important;
     
     /* Proteksi seleksi teks */
@@ -45,9 +46,12 @@
 
 /* KONTAINER UTAMA TIMER */
 .rakbuku-full-screen .container {
-    width: 95%;
+    width: 100%;
     max-width: 1200px;
     text-align: center;
+    padding: 40px 40px 30px 40px;
+    box-sizing: border-box;
+    margin: 0 auto;
 }
 
 /* Memaksa seluruh elemen teks berwarna putih solid agar menang kontras dari CSS CMS */
@@ -193,13 +197,18 @@
    SEKSI BLOK FOOTER MANDIRI (PERBAIKAN JARAK & BACKGROUND)
    =================================================== */
 .rakbuku-full-screen .osce-separate-footer {
-    width: 100% !important;
+    width: 100vw !important;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
     background: #00975d !important; /* <--- Silakan ganti warna background footer di sini jika ingin warna lain */
     padding: 25px 30px 45px 30px !important; /* Jarak atas-bawah ditambah agar longgar dan menutup area biru bawah */
     text-align: center !important;
     border-top: 3px solid #b2d235 !important; /* Ketebalan garis hijau disesuaikan agar lebih tegas */
     flex-shrink: 0; 
-    margin-top: 30px !important; /* Memberikan ruang/jarak dari tombol rotasi di atasnya agar tidak mepet */
+    margin-top: 0 !important; /* Memberikan ruang/jarak dari tombol rotasi di atasnya agar tidak mepet */
 }
 
 .rakbuku-full-screen .osce-separate-footer p {
