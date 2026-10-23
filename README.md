@@ -19,7 +19,7 @@ Timer stase OSCE untuk tampilan proyektor. Satu rotasi berjalan 15 menit, 11 rot
 
 ## Catatan
 
-- Isyarat suara memutar klip `.mp3` (mono, 44.1 kHz) dari folder `audio/` (tanpa TTS browser). Sajikan lewat HTTP agar pemutaran lebih andal.
+- Isyarat suara memutar klip `.mp3` (mono, 44.1 kHz) dari folder `audio/` (tanpa TTS browser). Semua klip sudah dinormalisasi ke kenyaringan seragam. Sajikan lewat HTTP agar pemutaran lebih andal.
 - Kalimat dinamis `Rotasi N dimulai/dipilih` dirangkai dari `ROTASI.mp3` + `N.mp3` + `DIMULAI/DIPILIH.mp3`.
 - Halaman mengunci klik kanan, seleksi, dan sebagian pintasan developer (mode kios). Tidak ada penanda indeks mesin pencari (`noindex`).
 
