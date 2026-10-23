@@ -18,13 +18,60 @@ const progressFillEl = document.getElementById('progress-fill');
 const appEl = document.getElementById('osce-app');
 const startBtnEl = document.getElementById('start-btn');
 
-function speak(text){
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = 'id-ID';
-        window.speechSynthesis.speak(utter);
+let audioPlayer = null;
+let audioQueue = [];
+let audioToken = 0;
+
+function stopAudio(){
+    audioToken++;
+    audioQueue = [];
+    if(audioPlayer){
+        audioPlayer.onended = null;
+        audioPlayer.onerror = null;
+        audioPlayer.pause();
     }
+}
+
+function playNext(token){
+    if(token !== audioToken) return;
+    const name = audioQueue[0];
+    if(!name) return;
+
+    if(!audioPlayer){
+        audioPlayer = new Audio();
+        audioPlayer.preload = 'auto';
+    }
+
+    const advance = () => {
+        if(token !== audioToken || audioQueue[0] !== name) return;
+        audioQueue.shift();
+        playNext(token);
+    };
+    audioPlayer.onended = advance;
+    audioPlayer.onerror = advance;
+    audioPlayer.src = 'audio/' + name + '.mp3';
+
+    let tries = 0;
+    const start = () => {
+        if(token !== audioToken || audioQueue[0] !== name) return;
+        const pending = audioPlayer.play();
+        if(!pending) return;
+        pending.catch(() => {
+            if(token !== audioToken || audioQueue[0] !== name) return;
+            if(tries++ < 2){
+                setTimeout(start, 100);
+            } else {
+                advance();
+            }
+        });
+    };
+    start();
+}
+
+function playAudio(names){
+    stopAudio();
+    audioQueue = names.map(String);
+    playNext(audioToken);
 }
 
 function setPhase(name){
@@ -94,7 +141,7 @@ function advanceRotation(){
     remaining = ROTATION_TIME;
     setRotation(rotation);
     syncRotationButtons();
-    speak('Rotasi ' + rotation + ' dimulai');
+    playAudio(['ROTASI', rotation, 'DIMULAI', 'Silahkan membaca soal']);
     updateDisplay();
 }
 
@@ -108,7 +155,7 @@ function nextStage(){
     if(rotation === 6){
         freezeMode = true;
         remaining = FREEZE_TIME;
-        speak('Freeze dimulai. Penguji istirahat dan peserta menunggu di depan stase');
+        playAudio(['Freeze dimulai']);
         updateDisplay();
         return;
     }
@@ -133,18 +180,18 @@ function finishOSCE(){
     setPhase('reading');
     progressFillEl.style.width = '0%';
     progressEl.setAttribute('aria-valuenow', 0);
-    speak('OSCE telah selesai');
+    playAudio(['OSCE selesai']);
 }
 
 function tick(){
     remaining--;
     if(!freezeMode){
         const elapsed = ROTATION_TIME - remaining;
-        if(elapsed === 60){ speak('Silakan membaca soal'); }
-        if(elapsed === 780){ speak('Waktu tersisa satu menit'); }
-        if(elapsed === 840){ speak('Silakan pindah stase berikutnya'); }
+        if(elapsed === 60){ playAudio(['Silahkan masuk']); }
+        if(elapsed === 780){ playAudio(['Waktu tersisa satu menit']); }
+        if(elapsed === 840){ playAudio(['Silahkan pindah ke stase beriutnya']); }
     } else {
-        if(remaining === 60){ speak('Penguji dipersilakan kembali ke ruangan'); }
+        if(remaining === 60){ playAudio(['Penguji dipersilahkan kembali']); }
     }
     if(remaining <= 0){
         nextStage();
@@ -165,7 +212,11 @@ function startTimer(){
     running = true;
     interval = setInterval(tick, 1000);
     if(!isContinued){
-        speak('Peserta dipersilakan membaca soal');
+        if(rotation === 1){
+            playAudio(['OSCE', 'DIMULAI', 'Peserta dipersilahkan membaca soal']);
+        } else {
+            playAudio(['ROTASI', rotation, 'DIMULAI', 'Silahkan membaca soal']);
+        }
     }
     startBtnEl.textContent = 'Jeda';
 }
@@ -175,11 +226,13 @@ function pauseTimer(){
     running = false;
     clearInterval(interval);
     isContinued = true;
+    stopAudio();
     startBtnEl.textContent = 'Lanjutkan';
 }
 
 function resetTimer(){
     clearInterval(interval);
+    stopAudio();
     running = false;
     rotation = 1;
     remaining = ROTATION_TIME;
@@ -210,7 +263,7 @@ function goRotation(rot){
     setRotation(rotation);
     syncRotationButtons();
     updateDisplay();
-    speak('Rotasi ' + rotation + ' dipilih');
+    playAudio(['ROTASI', rotation, 'DIPILIH']);
 }
 
 function skipPhase(){
@@ -223,19 +276,19 @@ function skipPhase(){
     if(elapsed < 60){
         remaining = 840;
         updateDisplay();
-        speak('silakan masuk');
+        playAudio(['Silahkan masuk']);
         return;
     }
     if(elapsed < 780){
         remaining = 120;
         updateDisplay();
-        speak('Waktu tersisa satu menit');
+        playAudio(['Waktu tersisa satu menit']);
         return;
     }
     if(elapsed < 840){
         remaining = 60;
         updateDisplay();
-        speak('Silakan pindah stase berikutnya');
+        playAudio(['Silahkan pindah ke stase beriutnya']);
         return;
     }
     nextStage();
